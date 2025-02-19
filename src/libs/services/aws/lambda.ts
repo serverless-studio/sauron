@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { REGION } from '@service/env';
 

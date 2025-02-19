@@ -24,7 +24,6 @@ export default {
                 'logs:CreateLogGroup',
               ],
               Resource: [
-                // eslint-disable-next-line max-len
                 `arn:aws:logs:${REGION}:${ACCOUNT_ID}:log-group:/aws/lambda/${SERVICE_NAME}-${ENV}*:*`,
               ],
               Effect: 'Allow',
@@ -35,7 +34,6 @@ export default {
                 'logs:PutLogEvents',
               ],
               Resource: [
-                // eslint-disable-next-line max-len
                 `arn:aws:logs:${REGION}:${ACCOUNT_ID}:log-group:/aws/lambda/${SERVICE_NAME}-${ENV}*:*:*`,
               ],
               Effect: 'Allow',
