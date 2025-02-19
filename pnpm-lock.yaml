@@ -15,11 +15,11 @@ importers:
         specifier: ^3.749.0
         version: 3.749.0
       '@middy/core':
-        specifier: ^6.0.0
-        version: 6.0.0
+        specifier: ^4.7.0
+        version: 4.7.0
       '@middy/http-json-body-parser':
-        specifier: ^6.0.0
-        version: 6.0.0
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slack/web-api':
         specifier: ^7.8.0
         version: 7.8.0
@@ -36,6 +36,9 @@ importers:
       '@eslint/js':
         specifier: ^9.20.0
         version: 9.20.0
+      '@jest/types':
+        specifier: ^29.6.3
+        version: 29.6.3
       '@serverless/typescript':
         specifier: ^3.38.0
         version: 3.38.0
@@ -945,17 +948,17 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@middy/core@6.0.0':
-    resolution: {integrity: sha512-EFsvMkyFfaIu3Uzye26w2NzycwMAbh/99XlhRH9p240y/YKA0nlQ7itE8y7lBJOJ/clj1qu9evQeLfaiWhJAFg==}
-    engines: {node: '>=20'}
+  '@middy/core@4.7.0':
+    resolution: {integrity: sha512-yI++DmhDQ8+ugvY7+GrEnb2PF0M/6Wzbgu4Tf7QhOlhwKGDd4j6or+Ab7qYPWx+jnKf8F0tqlmh0gV4JLi0yHw==}
+    engines: {node: '>=16'}
 
-  '@middy/http-json-body-parser@6.0.0':
-    resolution: {integrity: sha512-/uhdznqnLStNpqMqMBrTF0TjuPktB0T6Uy2p5vsitdVa8XycWsNDSkK2vMCWKYGGTA+vLHZs4RKAHXihAed5pg==}
-    engines: {node: '>=20'}
+  '@middy/http-json-body-parser@4.7.0':
+    resolution: {integrity: sha512-OKDKAerCi3lDvSmZeV3lViKNHSPzj26nwNnVKt6Dcb0so0Llb9pDQtT5/GiEVjyuBbVteY1COz9AZlgprOw7lQ==}
+    engines: {node: '>=16'}
 
-  '@middy/util@6.0.0':
-    resolution: {integrity: sha512-V2/gJ4wE6TtMJNAnUTm3VRdgNyLI6zdNLy3MzhrJOwxiUslG1OSShE1IUYR0cmzMOm5w/Y2p3+OIRXRqKUVHYQ==}
-    engines: {node: '>=20'}
+  '@middy/util@4.7.0':
+    resolution: {integrity: sha512-HUh0EOLGzBQjmJks4N12mmEebshtCUwyzdhk59UmAj97zzM0qn0exQvZDfbkY0pb/6b7sNnf7IpFww8Z6YxpWw==}
+    engines: {node: '>=16'}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -4243,13 +4246,13 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@middy/core@6.0.0': {}
+  '@middy/core@4.7.0': {}
 
-  '@middy/http-json-body-parser@6.0.0':
+  '@middy/http-json-body-parser@4.7.0':
     dependencies:
-      '@middy/util': 6.0.0
+      '@middy/util': 4.7.0
 
-  '@middy/util@6.0.0': {}
+  '@middy/util@4.7.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:

@@ -2,16 +2,16 @@ import * as slack from '@libs/services/slack';
 import { main } from '../handler';
 import * as suppressedError from '@libs/resources/suppressedError';
 import { LogFormat } from '@libs/helpers/logs/types';
-import { RequestEvent } from '@middy/http-json-body-parser';
+import type { RequestEvent } from '@middy/http-json-body-parser';
 import { Context } from 'aws-lambda';
 
 
-describe('handler', () => {
+describe('middy', () => {
   beforeAll(() => {
     jest.spyOn(suppressedError, 'getErrorSuppressionByFunctionName').mockResolvedValue(undefined);
     jest.spyOn(slack, 'postToErrorsChannel').mockResolvedValue(undefined);
   });
-  it('should not error', async () => {
+  it('should not throw error', async () => {
     // Arrange
     const event: LogFormat = {
       functionName: 'test',
@@ -28,11 +28,9 @@ describe('handler', () => {
     };
     const context = {};
 
-    const result = await main(event as unknown as RequestEvent, context as Context);
+    await main(event as unknown as RequestEvent, context as Context, null);
 
-    console.log(result);
 
-    // Assert
     expect(true).toBe(true);
   });
 });
