@@ -9,7 +9,7 @@ export interface LogFormat {
   serviceName: string;
   link: string;
   logStream: string;
-  timestamp: string;
+  timestamp: number;
   logEvents: LogEvent[];
   eventFilter: string;
 }

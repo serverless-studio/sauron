@@ -29,7 +29,11 @@ export const generateMessageBlocks = ({
       },
       {
         type: 'mrkdwn',
-        text: `*When:*\n${timestamp}`,
+        /**
+         * Timestamps can either have 10 or 13 digits. NodeJS Date expects 13 and this
+         * ensures it has 13 digits.
+         */
+        text: `*When:*\n${new Date(parseInt((String(timestamp).padEnd(13, '0'))))}`,
       },
       {
         type: 'mrkdwn',
