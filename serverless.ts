@@ -55,7 +55,7 @@ const serverlessConfiguration: AWS = {
       lambdaLogListenerRole: {
         Value: { 'Fn::GetAtt': [logHandler.name, 'Arn'] },
         Export: {
-          Name: scopeResourceNameToService('lambdaLogListenerRoleArn'),
+          Name: scopeResourceNameToService('lambdaLogHandlerRoleArn'),
         },
       },
     },
