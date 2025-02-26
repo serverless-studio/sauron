@@ -1,5 +1,5 @@
 import {
-  ENV, ACCOUNT_ID, REGION, SERVICE_NAME,
+  ACCOUNT_ID, REGION,
 } from '../../env';
 import { generateCustomerManagedPolicyArn, scopeResourceNameToService } from '../utils';
 
@@ -24,7 +24,7 @@ export default {
                 'logs:CreateLogGroup',
               ],
               Resource: [
-                `arn:aws:logs:${REGION}:${ACCOUNT_ID}:log-group:/aws/lambda/${SERVICE_NAME}-${ENV}*:*`,
+                `arn:aws:logs:${REGION}:${ACCOUNT_ID}:log-group:/aws/lambda/*:*`,
               ],
               Effect: 'Allow',
             },
@@ -34,7 +34,7 @@ export default {
                 'logs:PutLogEvents',
               ],
               Resource: [
-                `arn:aws:logs:${REGION}:${ACCOUNT_ID}:log-group:/aws/lambda/${SERVICE_NAME}-${ENV}*:*:*`,
+                `arn:aws:logs:${REGION}:${ACCOUNT_ID}:log-group:/aws/lambda/*:*:*`,
               ],
               Effect: 'Allow',
             },

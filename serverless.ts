@@ -5,11 +5,11 @@ import {
 } from './env';
 import policies from './awsResources/policies';
 import roles from './awsResources/roles';
-import logHandler from './awsResources/roles/scoped/logHandler';
 import dynamoDbTables from './awsResources/dynamoDb/tables';
 import functions from './src/functions';
 import { customDomain } from './awsResources/apiGateway/customDomain';
 import { scopeResourceNameToService } from './awsResources/utils';
+import logListener from './awsResources/roles/scoped/logListener';
 
 const serverlessConfiguration: AWS = {
   service: SERVICE_NAME,
@@ -53,9 +53,9 @@ const serverlessConfiguration: AWS = {
     },
     Outputs: {
       lambdaLogListenerRole: {
-        Value: { 'Fn::GetAtt': [logHandler.name, 'Arn'] },
+        Value: { 'Fn::GetAtt': [logListener.name, 'Arn'] },
         Export: {
-          Name: scopeResourceNameToService('lambdaLogHandlerRoleArn'),
+          Name: scopeResourceNameToService('lambdaLogListenerRoleArn'),
         },
       },
     },
