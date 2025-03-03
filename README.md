@@ -31,7 +31,7 @@ This section provides basic instructions on how to create a Slack bot that can w
 
 * After installation, you'll receive a "Bot User OAuth Token"
 * Keep this token secure, as it's the key to controlling your bot
-* The token will later need to be set in the .env file as SLACK_CLIENT_TOKEN [Go to Populate with values](#populate-env) 
+* The token will later need to be set in the .env file as SLACK_CLIENT_TOKEN [go to steps](#populate-env) 
 
 # Deployment Instructions
 
@@ -66,7 +66,7 @@ This project requires Node.js version 20 and environment variables to be set for
     pnpm install
     ```
 
-## 3. Create and Configure `.env` File
+## 3. Create and Configure `.env` File <a name="populate-env"></a>
 
 1.  **Copy the sample:** Duplicate the `.env.sample` file and rename it to `.env`.
 
@@ -74,7 +74,7 @@ This project requires Node.js version 20 and environment variables to be set for
     cp .env.sample .env
     ```
 
-2.  **Populate with values:** Open the `.env` file in a text editor and replace the placeholder values with your actual environment variables. <a name="populate-env"></a> 
+2.  **Populate with values:** Open the `.env` file in a text editor and replace the placeholder values with your actual environment variables. 
 
     ```bash
     # Example .env content:
