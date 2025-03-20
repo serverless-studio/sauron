@@ -1,0 +1,36 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "allowSyntheticDefaultImports": true,
+    "outDir": "out-tsc/backend",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "tsBuildInfoFile": "out-tsc/backend/tsconfig.app.tsbuildinfo"
+  },
+  "include": ["src/**/*.ts", "serverless.ts", "**/*.ts", "./awsResources/**/*.ts"],
+  "references": [
+    {
+      "path": "../../libs/types/tsconfig.lib.json"
+    }
+  ],
+  "exclude": [
+    "out-tsc",
+    "dist",
+    "jest.config.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "eslint.config.js",
+    "eslint.config.cjs",
+    "eslint.config.mjs"
+  ]
+}
