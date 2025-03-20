@@ -1,4 +1,4 @@
-import { Region } from './types';
+import { Region } from './src/libs/types/region';
 
 const {
   IS_LOCAL,

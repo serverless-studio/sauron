@@ -7,12 +7,12 @@ interface Props {
   handleUpdateMatcher: (id: number, value: string) => void;
 }
 
-function MatchersInput({
+const MatchersInput = ({
   matchers,
   handleAddMatcher,
   handleDeleteMatcher,
   handleUpdateMatcher,
-} : Props) {
+} : Props) => {
   return (
     <div>
       {matchers.map((str, index) => (
