@@ -1,0 +1,3 @@
+const VITE_SAURON_API_URL = import.meta.env.VITE_SAURON_API_URL;
+
+export const SAURON_API_URL = VITE_SAURON_API_URL;
