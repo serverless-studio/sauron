@@ -1,4 +1,4 @@
-import type { AWS } from '@serverless/typescript';
+import type { AWS } from 'osls';
 
 import { handlerPath } from '../../../libs/handlerResolver';
 import role from '../../../awsResources/roles/scoped/logHandler';

@@ -1,4 +1,4 @@
-import type { AWS } from '@serverless/typescript';
+import type { AWS } from 'osls';
 
 import {
   API_GATEWAY_ALLOWED_IPS,
@@ -18,7 +18,7 @@ import apis from './src/apis';
 
 const serverlessConfiguration: AWS = {
   service: SERVICE_NAME,
-  frameworkVersion: '4',
+  frameworkVersion: '3',
   plugins: [],
   provider: {
     name: 'aws',

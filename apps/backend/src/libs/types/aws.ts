@@ -1,3 +1,3 @@
-import type { AWS } from '@serverless/typescript';
+import type { AWS } from 'osls';
 
 export type AWSFunction = NonNullable<AWS['functions']>[string] & { warmup?: unknown };
