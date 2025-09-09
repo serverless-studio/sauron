@@ -19,7 +19,7 @@ import apis from './src/apis';
 const serverlessConfiguration: AWS = {
   service: SERVICE_NAME,
   frameworkVersion: '3',
-  plugins: [],
+  plugins: ['serverless-esbuild'],
   provider: {
     name: 'aws',
     region: REGION,
@@ -49,8 +49,7 @@ const serverlessConfiguration: AWS = {
       minify: true,
       exclude: ['@aws-sdk/'],
       target: 'node20',
-      concurrency: 10,
-      configFile: ''
+      concurrency: 10
     },
   },
   resources: {
