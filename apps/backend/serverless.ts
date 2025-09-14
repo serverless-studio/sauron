@@ -1,4 +1,4 @@
-import type { AWS } from '@serverless/typescript';
+import type { AWS } from 'osls';
 
 import {
   API_GATEWAY_ALLOWED_IPS,
@@ -18,8 +18,8 @@ import apis from './src/apis';
 
 const serverlessConfiguration: AWS = {
   service: SERVICE_NAME,
-  frameworkVersion: '4',
-  plugins: [],
+  frameworkVersion: '3',
+  plugins: ['serverless-esbuild'],
   provider: {
     name: 'aws',
     region: REGION,
@@ -49,8 +49,7 @@ const serverlessConfiguration: AWS = {
       minify: true,
       exclude: ['@aws-sdk/'],
       target: 'node20',
-      concurrency: 10,
-      configFile: ''
+      concurrency: 10
     },
   },
   resources: {
