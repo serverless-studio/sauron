@@ -5,11 +5,22 @@ import { main } from '../handler';
 import * as suppressedError from '../../../../libs/resources/suppressedError';
 import { LogFormat } from '../../../../libs/helpers/logs/types';
 
+jest.mock('../../../../libs/resources/suppressedError', () => ({
+  __esModule: true,
+  ...jest.requireActual('../../../../libs/resources/suppressedError'),
+  getErrorSuppressionByFunctionName: jest.fn(),
+}));
+
+jest.mock('../../../../libs/services/slack', () => ({
+  __esModule: true,
+  ...jest.requireActual('../../../../libs/services/slack'),
+  postToErrorsChannel: jest.fn(),
+}));
 
 describe('middy', () => {
   beforeAll(() => {
-    jest.spyOn(suppressedError, 'getErrorSuppressionByFunctionName').mockResolvedValue(undefined);
-    jest.spyOn(slack, 'postToErrorsChannel').mockResolvedValue(undefined);
+    (suppressedError.getErrorSuppressionByFunctionName as jest.Mock).mockResolvedValue(undefined);
+    (slack.postToErrorsChannel as jest.Mock).mockResolvedValue(undefined);
   });
   it('should not throw error', async () => {
     // Arrange

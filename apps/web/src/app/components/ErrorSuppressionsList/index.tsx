@@ -29,7 +29,7 @@ const ErrorSuppressionTable: React.FC = () => {
     isError: deleteError,
   }] = useDeleteErrorSuppressionMutation();
 
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingFunctionName, setDeletingFunctionName] = useState<string | null>(null);
 
   const filteredRules = (errorSuppressions || []).filter(rule => 
     rule.functionName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -41,14 +41,14 @@ const ErrorSuppressionTable: React.FC = () => {
     setAddOrUpdateModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    setDeletingId(id);
-    await deleteErrorSuppression(id);
+  const handleDelete = async (functionName: string) => {
+    setDeletingFunctionName(functionName);
+    await deleteErrorSuppression(functionName);
   };
 
   useEffect(() => {
     if (deleteSuccess || deleteError) {
-      setDeletingId(null); // Reset after success or error
+      setDeletingFunctionName(null); // Reset after success or error
     }
   }, [deleteError, deleteSuccess]);
 
@@ -110,7 +110,7 @@ const ErrorSuppressionTable: React.FC = () => {
               
               return (
                 <div 
-                  key={rule.id} 
+                  key={rule.functionName}
                   className={classNames(
                     tableStyling,
                     'p-3 px-6 items-center hover:bg-muted/20 animate-fade-in group hover:bg-background-300',
@@ -131,8 +131,9 @@ const ErrorSuppressionTable: React.FC = () => {
                   <div className="col-span-4 hidden sm:block overflow-hidden">
                     <div className="flex flex-col gap-1">
                       {rule.matchers.length > 0 ? (
-                        rule.matchers.slice(0, 3).map((matcher) => (
+                        rule.matchers.slice(0, 3).map((matcher, index) => (
                           (<span
+                            key={index}
                             className={classNames('border border-dashed rounded-md px-2 py-1')}
                             title={matcher}>
                               {restrictMatcherCharacters(matcher)}
@@ -158,11 +159,11 @@ const ErrorSuppressionTable: React.FC = () => {
 
                     <GenericButton
                       text='Delete'
-                      onClick={() => handleDelete(rule.id)}
+                      onClick={() => handleDelete(rule.functionName)}
                       primary={false}
                       size='sm'
                       destructive
-                      loading={deletingId === rule.id && isDeleting}
+                      loading={deletingFunctionName === rule.functionName && isDeleting}
                     />
                   </div>
                 </div>

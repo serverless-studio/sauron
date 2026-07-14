@@ -14,7 +14,7 @@ export const errorSuppressionApi = createApi({
 
   endpoints: (builder) => ({
     // Create
-    createErrorSuppression: builder.mutation<ErrorSuppressionDTO, Omit<ErrorSuppressionDTO, 'id' | 'createdAt'>>({
+    createErrorSuppression: builder.mutation<ErrorSuppressionDTO, Omit<ErrorSuppressionDTO, 'createdAt'>>({
       query: (newErrorSuppression) => ({
         url: '/error-suppressions',
         method: 'POST',
@@ -30,34 +30,34 @@ export const errorSuppressionApi = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: 'ErrorSuppression' as const, id })),
+              ...result.map(({ functionName }) => ({ type: 'ErrorSuppression' as const, id: functionName })),
               'ErrorSuppression',
             ]
           : ['ErrorSuppression'],
     }),
 
     getErrorSuppressionById: builder.query<ErrorSuppressionDTO, string>({
-      query: (id) => `/error-suppressions/${id}`,
+      query: (functionName) => `/error-suppressions/${functionName}`,
       transformResponse: (response: ApiResponse<ErrorSuppressionDTO>) => response.data,
-      providesTags: (_, __, id) => [{ type: 'ErrorSuppression', id }],
+      providesTags: (_, __, functionName) => [{ type: 'ErrorSuppression', id: functionName }],
     }),
 
-    updateErrorSuppression: builder.mutation<ErrorSuppressionDTO, { id: string; data: Omit<ErrorSuppressionDTO, 'id' | 'createdAt'> }>({
-      query: ({ id, data }) => ({
-        url: `/error-suppressions/${id}`,
+    updateErrorSuppression: builder.mutation<ErrorSuppressionDTO, { functionName: string; data: Omit<ErrorSuppressionDTO, 'functionName' | 'createdAt'> }>({
+      query: ({ functionName, data }) => ({
+        url: `/error-suppressions/${functionName}`,
         method: 'PATCH',
         body: data,
       }),
       transformResponse: (response: ApiResponse<ErrorSuppressionDTO>) => response.data,
-      invalidatesTags: (_, __, arg) => [{ type: 'ErrorSuppression', id: arg.id }],
+      invalidatesTags: (_, __, arg) => [{ type: 'ErrorSuppression', id: arg.functionName }],
     }),
 
     deleteErrorSuppression: builder.mutation<void, string>({
-      query: (id) => ({
-        url: `/error-suppressions/${id}`,
+      query: (functionName) => ({
+        url: `/error-suppressions/${functionName}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_, __, id) => [{ type: 'ErrorSuppression', id }],
+      invalidatesTags: (_, __, functionName) => [{ type: 'ErrorSuppression', id: functionName }],
     }),
   }),
 });
