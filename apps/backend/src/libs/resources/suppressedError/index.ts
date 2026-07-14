@@ -1,84 +1,61 @@
 import {
-  QueryCommand, UpdateItemCommand, PutItemCommand, ScanCommand, GetItemCommand,
+  QueryCommand, UpdateItemCommand, PutItemCommand, ScanCommand, GetItemCommand, DeleteItemCommand
 } from '@aws-sdk/client-dynamodb';
-import { v4 as uuid } from 'uuid';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
 
 import { ErrorSuppressionDTO } from '@sauron/types';
 import { dynamoDb } from '../../services/aws/dynamoDb';
 import { ErrorSuppressionModel } from './model';
 import { ENV, SERVICE_NAME } from '../../../../env';
-import { deleteItemsByPKAndPartialSK, queryItemsByPKAndPartialSK } from '../../services/aws/dynamoUtils';
 
 const TABLE_NAME = `${ENV}_${SERVICE_NAME}`;
 
-const parseDynamoItem = (item) => {
+const parseDynamoItem = (item: any): ErrorSuppressionDTO => {
   const jsonItem = unmarshall(item) as unknown as ErrorSuppressionModel;
-  const id = jsonItem.pk.split('#')[1];
-  const functionName = jsonItem.sk.split('#')[1];
+  const functionName = jsonItem.pk.split('#')[1];
 
-  delete jsonItem.pk;
-  delete jsonItem.sk;
+  delete (jsonItem as any).pk;
+  delete (jsonItem as any).sk;
 
   return {
     ...jsonItem,
     functionName,
-    id,
-    matchers: Array.from(jsonItem.matchers),
+    matchers: Array.from(jsonItem.matchers || []),
   } as unknown as ErrorSuppressionDTO;
 }
 
-const parseDynamoItems = (items: unknown[]) => {
+const parseDynamoItems = (items: unknown[]): ErrorSuppressionDTO[] => {
   return items.map(parseDynamoItem);
 }
 
-const PK_PREFIX = 'ERROR_SUPPRESSION#';
-const SK_PREFIX = 'FUNCTION_NAME#';
-
-export const getErrorSuppressionById = async (errorSuppressionId: string) => {
-  const Items = await queryItemsByPKAndPartialSK(
-    TABLE_NAME,
-    `${PK_PREFIX}${errorSuppressionId}`,
-    'FUNCTION_NAME#',
-  );
-
-  return parseDynamoItem(Items[0]);
-};
+const PK_PREFIX = 'LAMBDA#';
+const SK_VALUE = 'CONFIG#ERROR_SUPPRESSION';
 
 export const getErrorSuppressionByFunctionName = async (
   functionName: string,
 ) => {
-  const input = new QueryCommand({
+  const input = new GetItemCommand({
     TableName: TABLE_NAME,
-    IndexName: 'GSI-sk-pk',
-    KeyConditionExpression: 'sk = :sk and begins_with(pk, :pkPrefix)',
-    ExpressionAttributeValues: {
-      ':sk': { S: `${SK_PREFIX}${functionName}` },
-      ':pkPrefix': { S: PK_PREFIX },
+    Key: {
+      pk: { S: `${PK_PREFIX}${functionName}` },
+      sk: { S: SK_VALUE },
     },
   });
 
   const result = await dynamoDb.send(input);
 
-  if (!result?.Items || !result?.Items.length) {
+  if (!result?.Item) {
     return undefined;
   }
 
-  const suppressedErrors = parseDynamoItems(result.Items);
-
-  return suppressedErrors[0];
+  return parseDynamoItem(result.Item);
 };
 
-/**
- * Update error suppression matchers based on the errorSupressionId
- */
 export const updateErrorSupression = async ({
-  errorSuppressionId,
   functionName,
   matchers,
   reason,
 } : {
-  errorSuppressionId: string,
   functionName: string,
   matchers: string[],
   reason?: string,
@@ -91,8 +68,8 @@ export const updateErrorSupression = async ({
   const input = new UpdateItemCommand({
     TableName: TABLE_NAME,
     Key: {
-      pk: { S: `${PK_PREFIX}${errorSuppressionId}` },
-      sk: { S: `${SK_PREFIX}${functionName}` },
+      pk: { S: `${PK_PREFIX}${functionName}` },
+      sk: { S: SK_VALUE },
     },
     // Update matchers or reason or reason and matchers is both provided
     UpdateExpression: `SET ${UpdateExpressions}`,
@@ -104,10 +81,7 @@ export const updateErrorSupression = async ({
 
   await dynamoDb.send(input);
 
-  return getErrorSuppression({
-    pk: `${PK_PREFIX}${errorSuppressionId}`,
-    sk: `${SK_PREFIX}${functionName}`,
-  });
+  return getErrorSuppressionByFunctionName(functionName);
 }
 
 export const createErrorSuppression = async ({
@@ -119,9 +93,8 @@ export const createErrorSuppression = async ({
   matchers: string[],
   reason?: string,
 }) => {
-  // Adds a uuid error suppression id and a function name
-  const pk = `${PK_PREFIX}${uuid()}`;
-  const sk = `${SK_PREFIX}${functionName}`;
+  const pk = `${PK_PREFIX}${functionName}`;
+  const sk = SK_VALUE;
 
   const input = new PutItemCommand({
     TableName: TABLE_NAME,
@@ -137,49 +110,38 @@ export const createErrorSuppression = async ({
 
   await dynamoDb.send(input);
 
-  const errorSuppresion = await getErrorSuppression({
-    pk,
-    sk,
-  });
+  const errorSuppresion = await getErrorSuppressionByFunctionName(functionName);
 
   return errorSuppresion;
 }
 
-export const getErrorSuppression = async ({
-  pk,
-  sk,
-} : { pk: string, sk: string}) => {
-  const input = new GetItemCommand({
-    TableName: TABLE_NAME,
-    Key: {
-      pk: { S: pk },
-      sk: { S: sk },
-    },
-  })
-
-  const result = await dynamoDb.send(input);
-
-  return parseDynamoItem(result.Item);
-};
-
 export const getAllErrorSuppressions = async () => {
-  const input = new ScanCommand({
+  const input = new QueryCommand({
     TableName: TABLE_NAME,
-    FilterExpression: 'begins_with(pk, :pkPrefix)',
+    IndexName: 'GSI-sk-pk',
+    KeyConditionExpression: 'sk = :sk',
     ExpressionAttributeValues: {
-      ':pkPrefix': { S: PK_PREFIX },
+      ':sk': { S: SK_VALUE },
     },
   });
 
   const result = await dynamoDb.send(input);
 
+  if (!result?.Items || !result?.Items.length) {
+    return [];
+  }
+
   return parseDynamoItems(result.Items);
 }
 
-export const deleteErrorSuppressionById = async (errorSuppressionId: string) => {
-  await deleteItemsByPKAndPartialSK(
-    TABLE_NAME,
-    `${PK_PREFIX}${errorSuppressionId}`,
-    SK_PREFIX,
-  );
+export const deleteErrorSuppressionByFunctionName = async (functionName: string) => {
+  const input = new DeleteItemCommand({
+    TableName: TABLE_NAME,
+    Key: {
+      pk: { S: `${PK_PREFIX}${functionName}` },
+      sk: { S: SK_VALUE },
+    },
+  });
+
+  await dynamoDb.send(input);
 }

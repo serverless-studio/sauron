@@ -7,22 +7,20 @@ import { schema } from './schema';
 const handler = async (event) => {
   const {
     pathParameters: {
-      errorSuppressionId,
+      functionName: pathFunctionName,
     },
   } = event;
 
   const {
-    functionName,
     matchers,
     reason,
   } = event.body as Pick<ErrorSuppressionDTO, 'functionName' | 'matchers' | 'reason'>;
 
   const errorSuppression = await updateErrorSupression({
-    errorSuppressionId,
-    functionName,
+    functionName: pathFunctionName,
     matchers,
     reason,
-  })
+  });
 
   return corsResponse(200, {
     data: errorSuppression,

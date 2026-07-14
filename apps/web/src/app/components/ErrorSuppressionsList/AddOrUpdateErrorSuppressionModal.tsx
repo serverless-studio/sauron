@@ -19,7 +19,6 @@ const AddOrUpdateErrorSuppressionModal: React.FC<AddOrUpdateErrorSuppressionModa
   errorSuppression,
 }) => {
   const {
-    id,
     createdAt,
     functionName: existingFunctionName,
     matchers: existingMatchers = [],
@@ -82,11 +81,10 @@ const AddOrUpdateErrorSuppressionModal: React.FC<AddOrUpdateErrorSuppressionModa
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (id) {
+    if (existingFunctionName) {
       await updateErrorSuppression({
-        id,
+        functionName: existingFunctionName,
         data: {
-          functionName: `${service}-${functionName}`,
           matchers,
           reason,
         }
@@ -106,7 +104,6 @@ const AddOrUpdateErrorSuppressionModal: React.FC<AddOrUpdateErrorSuppressionModa
     setSaveDisabled(
       !(service && functionName && matchers.length && matchers[0] !== '')
       || deepEqual(originalError, {
-        id,
         createdAt,
         functionName: `${service}-${functionName}`,
         matchers,
@@ -114,9 +111,7 @@ const AddOrUpdateErrorSuppressionModal: React.FC<AddOrUpdateErrorSuppressionModa
       })
     );
 
-    console.log(originalError);
-    console.log({ id, createdAt, functionName: `${service}-${functionName}`, matchers, reason });
-  }, [service, functionName, matchers, id, originalError, reason, createdAt]);
+  }, [service, functionName, matchers, originalError, reason, createdAt]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm m-0">
@@ -131,6 +126,7 @@ const AddOrUpdateErrorSuppressionModal: React.FC<AddOrUpdateErrorSuppressionModa
               value={service}
               onChange={(e) => setService(e.target.value)}
               placeholder="e.g. sauron-prod"
+              disabled={!!existingFunctionName}
             />
           </div>
           
@@ -143,6 +139,7 @@ const AddOrUpdateErrorSuppressionModal: React.FC<AddOrUpdateErrorSuppressionModa
               className={classNames('p-2 border rounded-md')}
               onChange={(e) => setFunctionName(e.target.value)}
               placeholder="e.g. postGetUserProfile"
+              disabled={!!existingFunctionName}
             />
           </div>
           

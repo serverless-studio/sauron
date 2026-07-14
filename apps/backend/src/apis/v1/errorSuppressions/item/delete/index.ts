@@ -10,7 +10,7 @@ export const deleteErrorSuppressionsItem: AWSFunction = {
     {
       http: {
         method: 'DELETE',
-        path: 'v1/error-suppressions/{errorSuppressionId}',
+        path: 'v1/error-suppressions/{functionName}',
         cors: defaultCors,
       },
     },

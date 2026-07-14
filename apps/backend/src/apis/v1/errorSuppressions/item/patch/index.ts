@@ -10,7 +10,7 @@ export const patchErrorSuppressionsItem: AWSFunction = {
     {
       http: {
         method: 'PATCH',
-        path: 'v1/error-suppressions/{errorSuppressionId}',
+        path: 'v1/error-suppressions/{functionName}',
         cors: defaultCors,
       },
     },
