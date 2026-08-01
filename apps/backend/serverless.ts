@@ -54,9 +54,11 @@ const serverlessConfiguration: AWS = {
   },
   resources: {
     Resources: {
-      ...(IS_MAIN_REGION ? policies : {}),
-      ...(IS_MAIN_REGION ? roles : {}),
-      ...(IS_MAIN_REGION ? dynamoDbTables : {}),
+      ...(IS_MAIN_REGION ? {
+        ...policies,
+        ...roles,
+        ...dynamoDbTables,
+      } : {}),
     },
     Outputs: {
       ...(IS_MAIN_REGION ? {
