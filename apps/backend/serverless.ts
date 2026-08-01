@@ -2,7 +2,7 @@ import type { AWS } from 'osls';
 
 import {
   API_GATEWAY_ALLOWED_IPS,
-  ENV, REGION, SERVICE_NAME,
+  ENV, REGION, SERVICE_NAME, IS_MAIN_REGION,
 } from './env';
 import policies from './src/awsResources/policies';
 import roles from './src/awsResources/roles';
@@ -54,17 +54,19 @@ const serverlessConfiguration: AWS = {
   },
   resources: {
     Resources: {
-      ...policies,
-      ...roles,
-      ...dynamoDbTables,
+      ...(IS_MAIN_REGION ? policies : {}),
+      ...(IS_MAIN_REGION ? roles : {}),
+      ...(IS_MAIN_REGION ? dynamoDbTables : {}),
     },
     Outputs: {
-      lambdaLogListenerRole: {
-        Value: { 'Fn::GetAtt': [logListener.name, 'Arn'] },
-        Export: {
-          Name: scopeResourceNameToService('lambdaLogListenerRoleArn'),
+      ...(IS_MAIN_REGION ? {
+        lambdaLogListenerRole: {
+          Value: { 'Fn::GetAtt': [logListener.name, 'Arn'] },
+          Export: {
+            Name: scopeResourceNameToService('lambdaLogListenerRoleArn'),
+          },
         },
-      },
+      } : {}),
     },
   },
 };

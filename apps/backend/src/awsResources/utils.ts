@@ -1,6 +1,6 @@
 import camelcase from 'camelcase';
 
-import { ACCOUNT_ID, ENV, SERVICE_NAME } from '../../env';
+import { ACCOUNT_ID, ENV, SERVICE_NAME, IS_MAIN_REGION } from '../../env';
 
 /**
  * @param name The name of the resource
@@ -25,4 +25,8 @@ export const scopeResourceNameToExternalService = (
 
 export const generateCustomerManagedPolicyArn = (policyName) => (
   `arn:aws:iam::${ACCOUNT_ID}:policy/${policyName}`
+);
+
+export const getLambdaRole = (roleName: string) => (
+  IS_MAIN_REGION ? roleName : `arn:aws:iam::${ACCOUNT_ID}:role/${roleName}`
 );
