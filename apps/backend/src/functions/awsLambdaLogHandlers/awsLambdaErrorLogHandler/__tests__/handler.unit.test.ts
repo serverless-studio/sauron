@@ -1,15 +1,25 @@
 import { Context } from 'aws-lambda';
 
 import * as slack from '../../../../libs/services/slack';
+
+jest.mock('../../../../libs/services/slack', () => ({
+  __esModule: true,
+  postToErrorsChannel: jest.fn(),
+}));
 import { main } from '../handler';
 import * as suppressedError from '../../../../libs/resources/suppressedError';
+
+jest.mock('../../../../libs/resources/suppressedError', () => ({
+  __esModule: true,
+  getErrorSuppressionByFunctionName: jest.fn(),
+}));
 import { LogFormat } from '../../../../libs/helpers/logs/types';
 
 
 describe('middy', () => {
   beforeAll(() => {
-    jest.spyOn(suppressedError, 'getErrorSuppressionByFunctionName').mockResolvedValue(undefined);
-    jest.spyOn(slack, 'postToErrorsChannel').mockResolvedValue(undefined);
+    (suppressedError.getErrorSuppressionByFunctionName as jest.Mock).mockResolvedValue(undefined);
+    (slack.postToErrorsChannel as jest.Mock).mockResolvedValue(undefined);
   });
   it('should not throw error', async () => {
     // Arrange

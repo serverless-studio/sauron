@@ -6,12 +6,15 @@ const {
   SLACK_CLIENT_TOKEN,
   DOMAIN_NAME,
   AWS_ACCOUNT_ID,
+  SAURON_MAIN_REGION: processEnvSauronMainRegion,
   COMMA_SEPARATED_API_GATEWAY_ALLOWED_IPS,
 } = process.env;
 
 export const SERVICE_NAME = 'sauron';
 export const ENV = process.env.ENV || 'dev';
 export const REGION = (process.env.REGION || 'eu-west-2') as Region;
+export const SAURON_MAIN_REGION = (processEnvSauronMainRegion || REGION) as Region;
+export const IS_MAIN_REGION = !processEnvSauronMainRegion || processEnvSauronMainRegion === REGION;
 export const ACCOUNT_ID = AWS_ACCOUNT_ID;
 export const RUN_LOCALLY = IS_OFFLINE || IS_LOCAL;
 export const SAURON_DOMAIN_NAME = DOMAIN_NAME;

@@ -1,7 +1,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 
-import { REGION } from '../../../../env';
+import { SAURON_MAIN_REGION } from '../../../../env';
 
 export const dynamoDb = new DynamoDBClient({
-  region: REGION,
+  region: SAURON_MAIN_REGION,
 });
